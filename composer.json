@@ -8,6 +8,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.1.0",
+        "laravel/sanctum": "^2.8",
         "armincms/qasedak": "~0.1"
     },
     "autoload": {
