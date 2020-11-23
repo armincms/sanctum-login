@@ -7,7 +7,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 { 
-	use HasApiTokens; 
+	use HasApiTokens {
+        HasApiTokens::createToken as sanctumCreateToken;
+    } 
 
     /**
      * Get the class name for polymorphic relations.
@@ -18,4 +20,20 @@ class User extends Model
     { 
 		return parent::class;
 	}
+
+    /**
+     * Create a new personal access token for the user.
+     *
+     * @param  string  $name
+     * @param  array  $abilities
+     * @return \Laravel\Sanctum\NewAccessToken
+     */
+    public function createToken(string $name, array $abilities = ['*'])
+    {
+        return tap($this->sanctumCreateToken($name, $abilities), function($access) {
+            if(! is_null($access)) {
+                $access->accessToken->forceFill(['tokenable_type' => static::class])->save(); 
+            }
+        }); 
+    }
 }
