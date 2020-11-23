@@ -24,7 +24,7 @@ class MobileVerification extends Model
         parent::boot();
 
         static::addGlobalScope(function (Builder $builder) {
-            $builder->where('created_at', '>=', now()->subMinutes(1));
+            $builder->where('created_at', '>=', now()->subMinutes(config('sanctum-login.code_expiration', 5)));
         });
     }
 
